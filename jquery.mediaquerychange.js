@@ -4,128 +4,62 @@
 
 	var MEDIA_QUERY_CHANGE_EVENT = {
 
-		exe: function() {
-			var that = this;
+		allMediaTextsArray: [],
 
+		exe: function() {
+			var that = MEDIA_QUERY_CHANGE_EVENT;
 			that.getStyleSheets();
 		},
-		each: function(target, fn) {
-
-			var isCorrectParameters = target && typeof target === 'object' && typeof fn === 'function';
-			var returnedValue;
-			var i = 0;
-
-			if(!isCorrectParameters) {
-				return;
-			}
-
-			function loopArray(length) {
-				for(; i < length; i = (i+1)|0) {
-
-					var data = target[i];
-
-					returnedValue = fn(data, i);
-
-					if(returnedValue === 'continue') {
-						continue;
-					}
-					if(returnedValue === 'break') {
-						break;
-					}
-				}
-			}
-
-			function loopObject() {
-				for(var key in target) {
-					if(target.hasOwnProperty(key)) {
-
-						var value = target[key];
-
-						returnedValue = fn(key, value, (i+1)|0);
-
-						if(returnedValue === 'continue') {
-							continue;
-						}
-						if(returnedValue === 'break') {
-							break;
-						}
-					}
-				}
-			}
-
-			if('length' in target) {
-				var length = target.length || null;
-				if(length) {
-					loopArray(length);
-				} else if(!(target instanceof Array)) {
-					loopObject();
-				}
-
-			} else if(!(target instanceof Array)) {
-				loopObject();
-			}
-		},
-
 		getStyleSheets: function() {
-			var that = this;
+			var that = MEDIA_QUERY_CHANGE_EVENT;
 			var styleSheets = document.styleSheets;
 			that.matchedMediaTextsArray = [];
-
-			return new Promise(function(resolve, reject) {
-				that.each(styleSheets, that.searchByStyleSheet(document));
-				resolve();
-			});
+			$.each(styleSheets, that.searchByStyleSheet);
 		},
 
-		searchByStyleSheet: function(doc) {
-			var that = this;
-			return function(styleSheet) {
-				var cssRules = styleSheet.cssRules;
-				//TODO: remove?
-				if(cssRules === null) {
-					return 'continue';
-				}
-				that.each(cssRules, that.searchByCssRule(doc));
-			};
+		searchByStyleSheet: function() {
+			var that = MEDIA_QUERY_CHANGE_EVENT;
+			var styleSheet = this;
+			var cssRules = styleSheet.cssRules;
+			$.each(cssRules, that.searchByCssRule);
 		},
 
-		searchByCssRule: function(doc) {
-			var that = this;
-			return function(cssRule) {
-				that.bindMediaQueryChange(cssRule);
-				that.handleCssRule(cssRule, doc);
-			}
+		searchByCssRule: function() {
+			var that = MEDIA_QUERY_CHANGE_EVENT;
+			var cssRule = this;
+			that.bindMediaQueryChange(cssRule);
+			that.handleCssRule(cssRule);
 		},
 
-		allMediaTextsArray: [],
 		bindMediaQueryChange: function(cssRule) {
-			var that = this;
+			var that = MEDIA_QUERY_CHANGE_EVENT;
 			if(cssRule.media) {
 				var mediaText = cssRule.media.mediaText;
 				var mediaQueryList = matchMedia(mediaText);
 
 				if(that.allMediaTextsArray.indexOf(mediaText) < 0) {
-					mediaQueryList.addEventListener('change', that.mediaQueryEventHandler.bind(that));
-					that.allMediaTextsArray.push(mediaText);
-				}
-				if(mediaQueryList.matches) {
-					if(that.matchedMediaTextsArray.indexOf(mediaText) < 0) {
-						that.matchedMediaTextsArray.push(mediaText);
+					if('addEventListener' in mediaQueryList) {
+						mediaQueryList.addEventListener('change', that.mediaQueryEventHandler);
+					} else {
+						mediaQueryList.addListener(that.mediaQueryEventHandler);
 					}
+					that.allMediaTextsArray.push(mediaText);
 				}
 			}
 		},
 
-		//TODO: support muliple mediaquery
 		mediaQueryEventHandler: function(event) {
-			var that = this;
+			var that = MEDIA_QUERY_CHANGE_EVENT;
 			var matchedMediaTextsArray = [];
-			that.each(that.allMediaTextsArray, function(mediaText) {
+			$.each(that.allMediaTextsArray, function() {
+				var mediaText = this;
 				var mediaQueryList = matchMedia(mediaText);
 				if(mediaQueryList.matches) {
-					matchedMediaTextsArray.push(mediaText);
+					if(matchedMediaTextsArray.indexOf(mediaText) < 0) {
+						matchedMediaTextsArray.push(mediaText);
+					}
 				}
-			})
+			});
 
 			$(window).trigger({
 				type: 'mediaquerychange',
@@ -138,11 +72,10 @@
 			});
 		},
 
-		handleCssRule: function(cssRule, doc) {
-			var that = this;
-			//TODO: support @support
-			switch(cssRule.type) {
+		handleCssRule: function(cssRule) {
+			var that = MEDIA_QUERY_CHANGE_EVENT;
 
+			switch(cssRule.type) {
 				case CSSRule.STYLE_RULE:
 					break;
 
@@ -150,13 +83,13 @@
 					var mediaText = cssRule.media.mediaText;
 					var mediaQueryList = matchMedia(mediaText);
 					if(mediaQueryList.matches) {
-						that.each(cssRule.cssRules, that.searchByCssRule(doc));
+						$.each(cssRule.cssRules, that.searchByCssRule);
 					}
-					return 'continue';
+					return true;
 					break;
 
 				default:
-					return 'continue';
+					return true;
 					break;
 			}
 		}
