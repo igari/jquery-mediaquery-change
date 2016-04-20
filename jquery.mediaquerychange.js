@@ -108,10 +108,7 @@
 					mediaQueryList.addEventListener('change', that.mediaQueryEventHandler.bind(that));
 					that.allMediaTextsArray.push(mediaText);
 				}
-
-				console.log(mediaQueryList.matches)
 				if(mediaQueryList.matches) {
-					console.info(mediaText)
 					if(that.matchedMediaTextsArray.indexOf(mediaText) < 0) {
 						that.matchedMediaTextsArray.push(mediaText);
 					}
