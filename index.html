@@ -24,12 +24,19 @@
 			background: linear-gradient(to left, #24C6DC , #514A9D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 			font-size: calc(2px + 2vh + 2vw);
 		}
-		@media(max-width: 960px) {
+		@media(max-width: 1280px) {
 			div {
 				background: #ffb347; /* fallback for old browsers */
 				background: -webkit-linear-gradient(to left, #ffb347 , #ffcc33); /* Chrome 10-25, Safari 5.1-6 */
 				background: linear-gradient(to left, #ffb347 , #ffcc33); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+			}
+		}
+		@media(max-width: 960px) {
+			div {
+				background: #fd746c; /* fallback for old browsers */
+				background: -webkit-linear-gradient(to left, #fd746c , #ff9068); /* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to left, #fd746c , #ff9068); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 			}
 		}
 		@media(max-width: 640px) {
@@ -69,7 +76,7 @@
 		$(window).on('ready mediaquerychange', setText);
 
 		function setText(event) {
-			$('div').html((event && event.matchedMedia.join('<br>')) || 'Let\' resize window!');
+			$('div').html((event && event.matchedMedia.join('<br>')) || 'Let\' resize window width!');
 		}
 	});
 </script>

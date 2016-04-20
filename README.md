@@ -9,3 +9,7 @@ $(window).on('mediaquerychange', func);
 ```
 
 [Download](https://raw.githubusercontent.com/igari/jquery.mediaquerychange.js/gh-pages/jquery.mediaquerychange.js)
+
+# LICENSE
+
+MIT
