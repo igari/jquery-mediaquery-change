@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		@media(max-width: 640px) {
+			div {
+				color: red;
+			}
+		}
+	</style>
+</head>
+<body>
+<div>
+	a
+</div>
+<script src="./jquery-2.2.3.min.js"></script>
+<script src="./jquery-mediaquerychange.js"></script>
+<script>
+	$(function() {
+		$(window).on('mediaquerychange', function(event) {
+			console.log(event)
+		});
+	});
+</script>
+</body>
+</html>
