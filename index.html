@@ -59,7 +59,7 @@
 		$(window).on('mediaquerychange', setText);
 
 		function setText(event) {
-			$('div').html((event && event.media) || 'Let\' resize window!');
+			$('div').html((event && event.matchedMedia.join('<br>')) || 'Let\' resize window!');
 		}
 	});
 </script>

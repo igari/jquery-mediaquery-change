@@ -105,11 +105,13 @@
 				var mediaQueryList = matchMedia(mediaText);
 
 				if(that.allMediaTextsArray.indexOf(mediaText) < 0) {
-					mediaQueryList.addEventListener('change', that.mediaQueryEventHandler);
+					mediaQueryList.addEventListener('change', that.mediaQueryEventHandler.bind(that));
 					that.allMediaTextsArray.push(mediaText);
 				}
 
+				console.log(mediaQueryList.matches)
 				if(mediaQueryList.matches) {
+					console.info(mediaText)
 					if(that.matchedMediaTextsArray.indexOf(mediaText) < 0) {
 						that.matchedMediaTextsArray.push(mediaText);
 					}
@@ -119,11 +121,19 @@
 
 		//TODO: support muliple mediaquery
 		mediaQueryEventHandler: function(event) {
-			//console.log(event);
-			//console.info('Media Query has been changed ' + (event.matches ? 'to' : 'from') + ' ' + event.media);
+			var that = this;
+			var matchedMediaTextsArray = [];
+			that.each(that.allMediaTextsArray, function(mediaText) {
+				var mediaQueryList = matchMedia(mediaText);
+				if(mediaQueryList.matches) {
+					matchedMediaTextsArray.push(mediaText);
+				}
+			})
+
 			$(window).trigger({
 				type: 'mediaquerychange',
 				media: event.media,
+				matchedMedia: matchedMediaTextsArray,
 				matches: event.matches,
 				srcElement: event.srcElement,
 				target: event.target,
