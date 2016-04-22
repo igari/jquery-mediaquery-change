@@ -1,4 +1,4 @@
-$(window).on('mediaquerychange', func);
+$(window).on('mediaquery:change', func);
 ============================================
 
 # Installation

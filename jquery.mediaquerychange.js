@@ -62,7 +62,7 @@
 			});
 
 			$(window).trigger({
-				type: 'mediaquerychange',
+				type: 'mediaquery:change',
 				media: event.media,
 				matchedMedia: matchedMediaTextsArray,
 				matches: event.matches,

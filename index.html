@@ -127,7 +127,7 @@
 	$(function() {
 		setText();
 
-		$(window).on('ready mediaquerychange', setText);
+		$(window).on('mediaquery:change', setText);
 
 		function setText(event) {
 			$('output').html((event && event.matchedMedia.join('<br>')) || 'Let\' resize window width!');
